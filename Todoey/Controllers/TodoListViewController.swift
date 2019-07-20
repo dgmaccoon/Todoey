@@ -7,25 +7,22 @@
 //
 
 import UIKit
+import CoreData
 
 class TodoListViewController: UITableViewController {
     
     var itemArray = [Item]()
     
-    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
-    
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
-        print(dataFilePath)
+        // Tells us approximately where our data is saved though the sqlite db is not in documents but instead under library/application support
+        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
         
         loadItems()
-        
-//        if let items = defaults.array(forKey: "TodoListArray") as? [Item] {
-//            itemArray = items
-//        }
         
     }
 
@@ -64,6 +61,9 @@ class TodoListViewController: UITableViewController {
         
         itemArray[indexPath.row].done = !itemArray[indexPath.row].done
         
+//        context.delete(itemArray[indexPath.row])
+//        itemArray.remove(at: indexPath.row)
+        
         saveItems()
         
         tableView.deselectRow(at: indexPath, animated: true)
@@ -82,9 +82,12 @@ class TodoListViewController: UITableViewController {
         
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
             // what will happen once the user clicks the Add Item button on our UIAlert
+            
+            // in parens is simply tapping the AppDelegate class so we can access persistentContainer
            
-            let newItem = Item()
+            let newItem = Item(context: self.context)
             newItem.title = textHolder.text!
+            newItem.done = false
             
             self.itemArray.append(newItem) // self needed bc inside a closure -- "in" keyword
             
@@ -106,16 +109,11 @@ class TodoListViewController: UITableViewController {
     //MARK - Model Manipulation Methods
     
     func saveItems() {
-        // save info in our custom plist at dataFilePath
-        let encoder = PropertyListEncoder()
         
         do {
-            let data = try encoder.encode(itemArray)
-            try data.write(to: dataFilePath!)
-            
+            try context.save()
         } catch {
-            print ("Error encoding item array, \(error)")
-            
+            print ("Error saving context \(error)")
         }
         
         self.tableView.reloadData()
@@ -123,17 +121,49 @@ class TodoListViewController: UITableViewController {
     }
     
     
-    func loadItems() {
-        if let data = try? Data(contentsOf: dataFilePath!) {
-            let decoder = PropertyListDecoder()
-            do {
-            itemArray = try decoder.decode([Item].self, from: data)
-            } catch {
-                print("Error decoding itemArray, \(error)")
+    func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest()) {
+        // with is variable name to use externally
+        // request is variable name used internally
+        // Item.fetchRequest() is the default it no variable is passed into the function
+        do {
+            itemArray = try context.fetch(request)
+        } catch {
+            print("Error fetching data from context \(error)")
+        }
+        
+        tableView.reloadData()
+        
+    }
+} // class TodoListViewController
+
+//MARK: - Search bar methods
+
+extension TodoListViewController : UISearchBarDelegate {
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        
+        let request : NSFetchRequest<Item> = Item.fetchRequest()
+        
+        request.predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!) // cd means that it will not be case or diacritic (accent marks) sensitive. By default, string searches are case and diacritic sensitive.
+        
+        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+        
+        loadItems(with: request)
+        
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+
+        if searchBar.text?.count == 0 {
+            loadItems()
+            
+            // We update UI elements on the main thread so user will see the changes
+            DispatchQueue.main.async {
+                searchBar.resignFirstResponder() // searchbar should no longer be selected
             }
+            
         }
     }
     
-    
-}
+} // Emd of extension TodoListViewController
 
