@@ -12,6 +12,11 @@ import CoreData
 class TodoListViewController: UITableViewController {
     
     var itemArray = [Item]()
+    var selectedCategory : Category? {
+        didSet{
+            loadItems()
+        }
+    }
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 
@@ -21,8 +26,6 @@ class TodoListViewController: UITableViewController {
         
         // Tells us approximately where our data is saved though the sqlite db is not in documents but instead under library/application support
         print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
-        
-        loadItems()
         
     }
 
@@ -88,6 +91,7 @@ class TodoListViewController: UITableViewController {
             let newItem = Item(context: self.context)
             newItem.title = textHolder.text!
             newItem.done = false
+            newItem.parentCategory = self.selectedCategory
             
             self.itemArray.append(newItem) // self needed bc inside a closure -- "in" keyword
             
@@ -107,7 +111,6 @@ class TodoListViewController: UITableViewController {
     }
     
     //MARK - Model Manipulation Methods
-    
     func saveItems() {
         
         do {
@@ -120,11 +123,22 @@ class TodoListViewController: UITableViewController {
         
     }
     
-    
-    func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest()) {
+    func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest(), predicate: NSPredicate? = nil) {
         // with is variable name to use externally
         // request is variable name used internally
-        // Item.fetchRequest() is the default it no variable is passed into the function
+        // Item.fetchRequest() is the default if no variable is passed into the function
+                
+        let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)
+        
+        if let additionalPredicate = predicate {
+            request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate, additionalPredicate])
+        } else {
+            request.predicate = categoryPredicate
+        }
+//        let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate, predicate])
+//
+//        request.predicate = compoundPredicate
+        
         do {
             itemArray = try context.fetch(request)
         } catch {
@@ -134,21 +148,21 @@ class TodoListViewController: UITableViewController {
         tableView.reloadData()
         
     }
-} // class TodoListViewController
+    
+} // End class TodoListViewController
 
 //MARK: - Search bar methods
-
 extension TodoListViewController : UISearchBarDelegate {
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         
         let request : NSFetchRequest<Item> = Item.fetchRequest()
         
-        request.predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!) // cd means that it will not be case or diacritic (accent marks) sensitive. By default, string searches are case and diacritic sensitive.
+        let predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!) // cd means that it will not be case or diacritic (accent marks) sensitive. By default, string searches are case and diacritic sensitive.
         
         request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
         
-        loadItems(with: request)
+        loadItems(with: request, predicate: predicate)
         
     }
     
@@ -165,5 +179,5 @@ extension TodoListViewController : UISearchBarDelegate {
         }
     }
     
-} // Emd of extension TodoListViewController
+} // End of extension TodoListViewController
 
