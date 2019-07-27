@@ -56,8 +56,20 @@ class TodoListViewController: UITableViewController {
     // MARK - TableView Delegate Methods
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        tableView.deselectRow(at: indexPath, animated: true)
+        if let item = todoItems?[indexPath.row] {
+            do {
+                try realm.write {
+                    item.done = !item.done
+                }
+            } catch {
+                print("Error setting item done status \(error)")
+            }
         
+        tableView.deselectRow(at: indexPath, animated: true)
+            
+        tableView.reloadData()
+        
+        }
     }
     
     // MARK - Add New Todo Items
@@ -101,7 +113,7 @@ class TodoListViewController: UITableViewController {
     //MARK - Model Manipulation Methods
     func loadItems() {
 
-        todoItems = realm.objects(Item.self)
+        todoItems = selectedCategory?.items.sorted(byKeyPath: "title", ascending: true)
 
         tableView.reloadData()
 
