@@ -14,7 +14,8 @@
 		4602C9EA22DCB7C900908266 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4602C9E822DCB7C900908266 /* LaunchScreen.storyboard */; };
 		461DF34C22EBFE30006EED87 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 461DF34B22EBFE30006EED87 /* Item.swift */; };
 		461DF34E22EBFE38006EED87 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 461DF34D22EBFE38006EED87 /* Category.swift */; };
-		46330E3622E2B9C700E71B7F /* CategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46330E3522E2B9C700E71B7F /* CategoryViewController.swift */; };
+		461DF35122ECFE00006EED87 /* SwipeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 461DF35022ECFE00006EED87 /* SwipeTableViewController.swift */; };
+		461DF35322ECFF6B006EED87 /* CategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 461DF35222ECFF6B006EED87 /* CategoryViewController.swift */; };
 		6B13D389783D3F2F614EAFFE /* libPods-Todoey.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6C31758DC17C6D5C7AE33F9B /* libPods-Todoey.a */; };
 /* End PBXBuildFile section */
 
@@ -30,7 +31,8 @@
 		461DF34B22EBFE30006EED87 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		461DF34D22EBFE38006EED87 /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
 		461DF34F22ECDD91006EED87 /* Dates.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Dates.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		46330E3522E2B9C700E71B7F /* CategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryViewController.swift; sourceTree = "<group>"; };
+		461DF35022ECFE00006EED87 /* SwipeTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeTableViewController.swift; sourceTree = "<group>"; };
+		461DF35222ECFF6B006EED87 /* CategoryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CategoryViewController.swift; sourceTree = "<group>"; };
 		6C31758DC17C6D5C7AE33F9B /* libPods-Todoey.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Todoey.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8068077D130A4BE3A095B447 /* Pods-Todoey.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Todoey.release.xcconfig"; path = "Target Support Files/Pods-Todoey/Pods-Todoey.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -90,9 +92,9 @@
 		468F66BC22E150A600D68360 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				461DF34F22ECDD91006EED87 /* Dates.playground */,
-				46330E3522E2B9C700E71B7F /* CategoryViewController.swift */,
 				4602C9E122DCB7C900908266 /* TodoListViewController.swift */,
+				461DF35222ECFF6B006EED87 /* CategoryViewController.swift */,
+				461DF35022ECFE00006EED87 /* SwipeTableViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -108,6 +110,7 @@
 		468F66BE22E150E100D68360 /* Supporting files */ = {
 			isa = PBXGroup;
 			children = (
+				461DF34F22ECDD91006EED87 /* Dates.playground */,
 				4602C9E622DCB7C900908266 /* Assets.xcassets */,
 				4602C9E822DCB7C900908266 /* LaunchScreen.storyboard */,
 			);
@@ -229,9 +232,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				461DF34C22EBFE30006EED87 /* Item.swift in Sources */,
-				46330E3622E2B9C700E71B7F /* CategoryViewController.swift in Sources */,
 				4602C9E222DCB7C900908266 /* TodoListViewController.swift in Sources */,
 				4602C9E022DCB7C900908266 /* AppDelegate.swift in Sources */,
+				461DF35122ECFE00006EED87 /* SwipeTableViewController.swift in Sources */,
+				461DF35322ECFF6B006EED87 /* CategoryViewController.swift in Sources */,
 				461DF34E22EBFE38006EED87 /* Category.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

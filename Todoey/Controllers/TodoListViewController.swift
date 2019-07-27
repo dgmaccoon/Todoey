@@ -87,9 +87,6 @@ class TodoListViewController: UITableViewController {
                 do {
                     try self.realm.write {
                         let newItem = Item()
-//                        let formatter = DateFormatter()
-//                        formatter.dateFormat = "yyyy/MM/dd HH:mm"
-//                        formatter.locale = NSLocale.current
                         newItem.title = textHolder.text!
                         newItem.dateCreated = Date()
                         currentCategory.items.append(newItem)
