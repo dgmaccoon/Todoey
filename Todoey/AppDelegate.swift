@@ -20,10 +20,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         print(Realm.Configuration.defaultConfiguration.fileURL)
         
-        let data = Data()
-        data.name = "Donal"
-        data.age = 51
-        
         do {
             let realm = try Realm()
 //            try realm.write {
