@@ -13,7 +13,7 @@ class CategoryViewController: UITableViewController {
     
     let realm = try! Realm()
     
-    var categories: Results<Category>?
+    var categories: Results<Category>? // Results are from realm
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -98,6 +98,7 @@ class CategoryViewController: UITableViewController {
         categories = realm.objects(Category.self)
         
         tableView.reloadData()
+        
     }
         
         

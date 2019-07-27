@@ -59,6 +59,7 @@ class TodoListViewController: UITableViewController {
         if let item = todoItems?[indexPath.row] {
             do {
                 try realm.write {
+//                    realm.delete(item)
                     item.done = !item.done
                 }
             } catch {
@@ -86,7 +87,11 @@ class TodoListViewController: UITableViewController {
                 do {
                     try self.realm.write {
                         let newItem = Item()
+//                        let formatter = DateFormatter()
+//                        formatter.dateFormat = "yyyy/MM/dd HH:mm"
+//                        formatter.locale = NSLocale.current
                         newItem.title = textHolder.text!
+                        newItem.dateCreated = Date()
                         currentCategory.items.append(newItem)
                     }
                 } catch {
@@ -113,6 +118,7 @@ class TodoListViewController: UITableViewController {
     //MARK - Model Manipulation Methods
     func loadItems() {
 
+//        todoItems = selectedCategory?.items.sorted(byKeyPath: "title", ascending: true)
         todoItems = selectedCategory?.items.sorted(byKeyPath: "title", ascending: true)
 
         tableView.reloadData()
@@ -123,32 +129,28 @@ class TodoListViewController: UITableViewController {
 } // End class TodoListViewController
 
 //MARK: - Search bar methods
-//extension TodoListViewController : UISearchBarDelegate {
-//
-//    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-//
-//        let request : NSFetchRequest<Item> = Item.fetchRequest()
-//
-//        let predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!) // cd means that it will not be case or diacritic (accent marks) sensitive. By default, string searches are case and diacritic sensitive.
-//
-//        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
-//
-//        loadItems(with: request, predicate: predicate)
-//
-//    }
-//
-//    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-//
-//        if searchBar.text?.count == 0 {
-//            loadItems()
-//
-//            // We update UI elements on the main thread so user will see the changes
-//            DispatchQueue.main.async {
-//                searchBar.resignFirstResponder() // searchbar should no longer be selected
-//            }
-//
-//        }
-//    }
-//
-//} // End of extension TodoListViewController
+extension TodoListViewController : UISearchBarDelegate {
+
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+
+        todoItems = todoItems?.filter("title CONTAINS[cd] %@", searchBar.text!).sorted(byKeyPath: "dateCreated", ascending: true)
+        
+        tableView.reloadData()
+
+    }
+
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+
+        if searchBar.text?.count == 0 {
+            loadItems()
+
+            // We update UI elements on the main thread so user will see the changes
+            DispatchQueue.main.async {
+                searchBar.resignFirstResponder() // searchbar should no longer be selected
+            }
+
+        }
+    }
+
+} // End of extension TodoListViewController
 
