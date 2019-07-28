@@ -15,6 +15,9 @@ class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegat
         super.viewDidLoad()
         
         tableView.rowHeight = 80.0
+        
+        // Tells us approximately where our data is saved though the sqlite db is not in documents but instead under library/application support
+        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
 
     }
     

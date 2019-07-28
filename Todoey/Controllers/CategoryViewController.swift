@@ -37,7 +37,22 @@ class CategoryViewController: SwipeTableViewController {
     
         cell.textLabel?.text = categories?[indexPath.row].name ?? "No Categories Added Yet"
         
-        cell.backgroundColor = UIColor.randomFlat // randomFlat is from ChameleonFramework
+        var cellColor = categories?[indexPath.row].cellColor
+        
+        if cellColor == "" {
+            cell.backgroundColor = UIColor.randomFlat // randomFlat is from ChameleonFramework
+            cellColor = cell.backgroundColor?.hexValue()
+            do {
+                try realm.write {
+                    categories?[indexPath.row].cellColor = cellColor!
+                }
+            } catch {
+                print("Error setting item done status \(error)")
+            }
+        } else {
+            cell.backgroundColor = UIColor.init(hexString: cellColor!)
+        }
+        
         
         return cell
         

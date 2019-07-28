@@ -25,9 +25,6 @@ class TodoListViewController: SwipeTableViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
-        // Tells us approximately where our data is saved though the sqlite db is not in documents but instead under library/application support
-        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
-        
     }
 
     // MARK - Tableview Datasource Methods
