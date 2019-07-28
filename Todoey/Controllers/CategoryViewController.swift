@@ -35,6 +35,8 @@ class CategoryViewController: SwipeTableViewController {
         
         let cell = super.tableView(tableView, cellForRowAt: indexPath) // gets Cell from superclass SwipeTableViewController
     
+        // Doesn't work when there's no categories. Doesn't work in appbrewery app either
+        // In lesson 261, she also provides default for color but it doesn't work either
         cell.textLabel?.text = categories?[indexPath.row].name ?? "No Categories Added Yet"
         
         let color = categories?[indexPath.row].color
