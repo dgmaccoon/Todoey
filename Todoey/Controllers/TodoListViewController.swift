@@ -13,8 +13,9 @@ import ChameleonFramework
 class TodoListViewController: SwipeTableViewController {
     
     var todoItems: Results<Item>?
-    
     let realm = try! Realm()
+    
+    @IBOutlet weak var searchBar: UISearchBar!
     
     var selectedCategory : Category? {
         didSet{
@@ -27,8 +28,42 @@ class TodoListViewController: SwipeTableViewController {
         // Do any additional setup after loading the view.
         
         tableView.separatorStyle = .none
+
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        
+        title = selectedCategory?.name
+        
+        guard let colorHex = selectedCategory?.color else {fatalError("Category does not have a color")}
+        
+        updateNavBar(withHexCode: colorHex)
         
     }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        
+        updateNavBar(withHexCode: "1D9BF6") // Need hex value to actually be my purple color rather than blue
+        
+    }
+    
+    // MARK: - Navigation Bar Setup Methods
+    func updateNavBar (withHexCode colorHexCode : String) {
+        
+         guard let navBar = navigationController?.navigationBar else {fatalError("Navigation Bar Controller does not exist")}
+    
+        guard let navBarColor = UIColor(hexString: colorHexCode) else {fatalError("Navigation Bar does not have a valid color")}
+        
+        navBar.barTintColor = navBarColor
+        
+        navBar.tintColor = ContrastColorOf(navBarColor, returnFlat: true)
+        
+        navBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor : ContrastColorOf(navBarColor, returnFlat: true)]
+        
+        searchBar.barTintColor = navBarColor
+        
+    }
+    
 
     // MARK - Tableview Datasource Methods
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -45,9 +80,7 @@ class TodoListViewController: SwipeTableViewController {
             
             cell.accessoryType = item.done ? .checkmark : .none
             
-            let categoryColor = selectedCategory?.color
-            
-            if let color = UIColor(hexString: categoryColor!)?.darken(byPercentage:CGFloat(indexPath.row) / CGFloat(todoItems!.count)) {
+            if let color = UIColor(hexString: selectedCategory!.color)?.darken(byPercentage:CGFloat(indexPath.row) / CGFloat(todoItems!.count)) {
                 cell.backgroundColor = color
                 cell.textLabel?.textColor = ContrastColorOf(color, returnFlat: true)
                 cell.tintColor = ContrastColorOf(color, returnFlat: true) // for check mark

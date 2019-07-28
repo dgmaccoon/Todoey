@@ -34,14 +34,19 @@ class CategoryViewController: SwipeTableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = super.tableView(tableView, cellForRowAt: indexPath) // gets Cell from superclass SwipeTableViewController
+        
+        if let category = categories?[indexPath.row] {
+            
+            cell.textLabel?.text = category.name
+            
+            guard let color = UIColor(hexString: category.color) else {fatalError("Category has no valid color")}
+            cell.textLabel?.textColor = ContrastColorOf(color, returnFlat: true)
+            cell.backgroundColor = color
+            
+        } else {
+             cell.textLabel?.text = "No Categories Added Yet"
+        }
     
-        // Doesn't work when there's no categories. Doesn't work in appbrewery app either
-        // In lesson 261, she also provides default for color but it doesn't work either
-        cell.textLabel?.text = categories?[indexPath.row].name ?? "No Categories Added Yet"
-        
-        let color = categories?[indexPath.row].color
-        cell.backgroundColor = UIColor.init(hexString: color!)
-        
         return cell
         
     }
