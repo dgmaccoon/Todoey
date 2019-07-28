@@ -21,7 +21,6 @@ class CategoryViewController: SwipeTableViewController {
         
         loadCategories()
         
-        tableView.rowHeight = 80.0
     }
     
     //MARK: - Tableview Data Source Methods
@@ -81,6 +80,8 @@ class CategoryViewController: SwipeTableViewController {
         
         present(alert, animated: true, completion: nil)
         
+        tableView.reloadData()
+        
     }
     
     func saveCategories(category: Category) {
@@ -117,9 +118,6 @@ class CategoryViewController: SwipeTableViewController {
             } catch {
                 print("Error deleting category item \(error)")
             }
-            
-        tableView.reloadData()
-            
         }
     }
     

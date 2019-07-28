@@ -9,7 +9,7 @@
 import UIKit
 import RealmSwift
 
-class TodoListViewController: UITableViewController {
+class TodoListViewController: SwipeTableViewController {
     
     var todoItems: Results<Item>?
     
@@ -37,7 +37,7 @@ class TodoListViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
+        let cell = super.tableView(tableView, cellForRowAt: indexPath) // gets Cell from superclass SwipeTableViewController
         
         if let item = todoItems?[indexPath.row] {
             
@@ -59,7 +59,6 @@ class TodoListViewController: UITableViewController {
         if let item = todoItems?[indexPath.row] {
             do {
                 try realm.write {
-//                    realm.delete(item)
                     item.done = !item.done
                 }
             } catch {
@@ -68,7 +67,7 @@ class TodoListViewController: UITableViewController {
         
         tableView.deselectRow(at: indexPath, animated: true)
             
-        tableView.reloadData()
+//        tableView.reloadData()
         
         }
     }
@@ -115,11 +114,27 @@ class TodoListViewController: UITableViewController {
     //MARK - Model Manipulation Methods
     func loadItems() {
 
-//        todoItems = selectedCategory?.items.sorted(byKeyPath: "title", ascending: true)
         todoItems = selectedCategory?.items.sorted(byKeyPath: "title", ascending: true)
 
         tableView.reloadData()
 
+    }
+    
+    //MARK: - Delete Swipe Method
+    override func updateModel(at indexPath: IndexPath) {
+        
+        if let itemForDeletion = self.todoItems?[indexPath.row] {
+            do {
+                try self.realm.write {
+                    self.realm.delete(itemForDeletion)
+                }
+            } catch {
+                print("Error deleting todo item \(error)")
+            }
+            
+//            tableView.reloadData()
+            
+        }
     }
 
 
